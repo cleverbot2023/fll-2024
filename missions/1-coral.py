@@ -13,7 +13,7 @@ async def main():
     motor_pair.pair(motor_pair.PAIR_1, port.A, port.B)
     motion_sensor.set_yaw_face(motion_sensor.BACK)
 
-    # 7s
+    # 7s, edit
     timerStart()
 
     await move(35.5)
