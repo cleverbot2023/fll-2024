@@ -13,7 +13,7 @@ from hub import port, motion_sensor
 async def main():
     motor_pair.pair(motor_pair.PAIR_1, port.A, port.B)
     motion_sensor.set_yaw_face(motion_sensor.BACK)
- 
+
     loop = True
     while(loop):
         color = color_sensor.rgbi(port.E)[0]
@@ -27,7 +27,6 @@ async def main():
 
     # await rotateTop(65)
     await move(82)
-    await rotateTop(-170)
     await yaw(-8)
     await move(33)
     await yaw(46)
@@ -39,13 +38,15 @@ async def main():
     # go homes
     # await rotateTop(50)
     # await move(-20)
-    runloop.run(rotateTop(50), move(-22))
+    runloop.run(rotateTop(50), move(-15))
     # await yaw(85)
     # await move(-10)
-    
+    await yaw(-30)
+    await move(-35)
+
     timerEnd()
 
-    
+
     sys.exit(0)
 
 ################### modify code abve
