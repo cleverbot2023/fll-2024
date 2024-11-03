@@ -3,6 +3,7 @@ import motor_pair
 import time
 import math
 import runloop
+import color_sensor
 import sys
 import time
 from hub import port, motion_sensor
@@ -13,6 +14,13 @@ async def main():
     motor_pair.pair(motor_pair.PAIR_1, port.A, port.B)
     motion_sensor.set_yaw_face(motion_sensor.BACK)
 
+   loop = True
+   while(loop):
+        color = color_sensor.rgbi(port.E)[0]
+        print(color)
+        if(color > 500):
+            loop = False
+        await runloop.sleep_ms(10)
 
     timerStart()
     # 21
