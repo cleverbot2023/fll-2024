@@ -1,9 +1,13 @@
-from hub import light_matrix
+from hub import light_matrix,port
 import runloop
+import motor
+
 
 async def main():
-    # write your code here
-    await light_matrix.write("hello there")
+    motor.run(port.A, 500)
+    motor.run(port.B, -500)
+
+
 
 
 runloop.run(main())
