@@ -7,10 +7,13 @@ import sys
 import time
 import color_sensor
 from hub import port, motion_sensor
+from hub import light_matrix
+
 
 
 ################### modify code below
 async def main():
+    await light_matrix.write("1")
     motor_pair.pair(motor_pair.PAIR_1, port.A, port.B)
     motion_sensor.set_yaw_face(motion_sensor.BACK)
 
@@ -21,6 +24,7 @@ async def main():
         if(color > 500):
             loop = False
         await runloop.sleep_ms(10)
+        
 
     # 7s
     timerStart()
