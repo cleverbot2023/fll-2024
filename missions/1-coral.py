@@ -13,7 +13,14 @@ from hub import light_matrix
 
 ################### modify code below
 async def main():
-    await light_matrix.write("1")
+    
+    pixels = [0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0,
+    0, 0, 100, 0, 0,
+    0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0]
+
+    light_matrix.show(pixels)
     motor_pair.pair(motor_pair.PAIR_1, port.A, port.B)
     motion_sensor.set_yaw_face(motion_sensor.BACK)
 
@@ -24,7 +31,7 @@ async def main():
         if(color > 500):
             loop = False
         await runloop.sleep_ms(10)
-        
+
 
     # 7s
     timerStart()
