@@ -7,10 +7,12 @@ import color_sensor
 import sys
 import time
 from hub import port, motion_sensor
+from hub import light_matrix
 
 
 ################### modify code below
 async def main():
+    await light_matrix.write("6")
     motor_pair.pair(motor_pair.PAIR_1, port.A, port.B)
     motion_sensor.set_yaw_face(motion_sensor.BACK)
 
@@ -31,7 +33,7 @@ async def main():
     # await move(80)
     # await rotateFront(-1200)
     # await move(-43)
-    
+
     timerEnd()
 
     sys.exit(0)
