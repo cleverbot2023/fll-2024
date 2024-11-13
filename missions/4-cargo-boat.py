@@ -25,17 +25,17 @@ async def main():
     timerStart()
     
     #18
-    await move(5)
-    await motor.run_for_degrees(port.D, 50, 100)
-    await move(85, Speed.Fast)
+    await move(20)
+    runloop.run(rotateFront(50), move(95))
 
-    # shark
-    runloop.run(move(-11), rotateTop(-120))
-    runloop.run(yaw(-30), rotateTop(-50))
-    await move(18)
-    await rotateFront(130)
-    await yaw(-4)
-    await move(140, Speed.Fast)
+    await move(-15)
+    runloop.run(rotateFront(-80), yaw(-45))
+    await rotateTop(60)
+    await rotateTop(-90)
+    await move(14)
+    runloop.run(rotateFront(-80), yaw(0))
+    runloop.run(rotateFront(-80), move(115, Speed.Fast))
+
 
     timerEnd()
 
@@ -552,10 +552,12 @@ def log(*args, logLevel=LogLevel.Normal):
 Const_StartTime = time.ticks_ms()
 Const_EndTime = time.ticks_ms()
 def timerStart():
+    global Const_StartTime
     Const_StartTime = time.ticks_ms()
     print("[timer] StartTime=", Const_StartTime, sep='')
 
 def timerEnd():
+    global Const_EndTime
     Const_EndTime = time.ticks_ms()
     diff = time.ticks_diff(Const_EndTime, Const_StartTime)
     print("[timer##] Diff=", diff / 1000, "s (", diff,"ms)", " StartTime=", Const_StartTime, " EndTime=", Const_EndTime, sep='')
