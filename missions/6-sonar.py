@@ -14,6 +14,13 @@ from hub import light_matrix
 async def main():
     motor_pair.pair(motor_pair.PAIR_1, port.A, port.B)
     motion_sensor.set_yaw_face(motion_sensor.BACK)
+    
+    pixels = [0, 100, 0, 100, 0,
+    0, 0, 0, 0, 0,
+    0, 100, 0, 100, 0,
+    0, 0, 0, 0, 0,
+    0, 100, 0, 100, 0]
+    light_matrix.show(pixels)
 
     loop = True
     while(loop):
