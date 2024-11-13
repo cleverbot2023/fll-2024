@@ -12,7 +12,13 @@ from hub import light_matrix
 
 ################### modify code below
 async def main():
-    await light_matrix.write("2")
+    pixels = [0, 0, 0, 0, 0,
+    0, 0, 100, 0, 0,
+    0, 0, 0, 0, 0,
+    0, 0, 100, 0, 0,
+    0, 0, 0, 0, 0]
+
+    light_matrix.show(pixels)
     motor_pair.pair(motor_pair.PAIR_1, port.A, port.B)
     motion_sensor.set_yaw_face(motion_sensor.BACK)
 
