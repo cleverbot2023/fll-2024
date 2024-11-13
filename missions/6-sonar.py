@@ -3,43 +3,40 @@ import motor_pair
 import time
 import math
 import runloop
-import color_sensor
 import sys
 import time
+import color_sensor
 from hub import port, motion_sensor
 from hub import light_matrix
 
 
 ################### modify code below
 async def main():
+    motor_pair.pair(motor_pair.PAIR_1, port.A, port.B)
+    motion_sensor.set_yaw_face(motion_sensor.BACK)
+    
     pixels = [0, 100, 0, 100, 0,
     0, 0, 0, 0, 0,
     0, 100, 0, 100, 0,
     0, 0, 0, 0, 0,
     0, 100, 0, 100, 0]
-
     light_matrix.show(pixels)
-    motor_pair.pair(motor_pair.PAIR_1, port.A, port.B)
-    motion_sensor.set_yaw_face(motion_sensor.BACK)
 
     loop = True
     while(loop):
         color = color_sensor.rgbi(port.E)[0]
-        print(color)
         if(color > 500):
             loop = False
-        await runloop.sleep_ms(10)
+        await runloop.sleep_ms(5)
 
     timerStart()
-    # 12s
-    await move(82)
-    await rotateFront(500)
-    await move(-90, Speed.Fast)
-
-    # await move(80)
-    # await rotateFront(-1200)
-    # await move(-43)
-
+    # 15s
+    await move(84)
+    await rotateFront(300, Speed.Fast)
+    await move(-43)
+    await rotateTop(400)
+    await move(-60)
+    
     timerEnd()
 
     sys.exit(0)
@@ -555,10 +552,12 @@ def log(*args, logLevel=LogLevel.Normal):
 Const_StartTime = time.ticks_ms()
 Const_EndTime = time.ticks_ms()
 def timerStart():
+    global Const_StartTime
     Const_StartTime = time.ticks_ms()
     print("[timer] StartTime=", Const_StartTime, sep='')
 
 def timerEnd():
+    global Const_EndTime
     Const_EndTime = time.ticks_ms()
     diff = time.ticks_diff(Const_EndTime, Const_StartTime)
     print("[timer##] Diff=", diff / 1000, "s (", diff,"ms)", " StartTime=", Const_StartTime, " EndTime=", Const_EndTime, sep='')
