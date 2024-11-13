@@ -547,10 +547,12 @@ def log(*args, logLevel=LogLevel.Normal):
 Const_StartTime = time.ticks_ms()
 Const_EndTime = time.ticks_ms()
 def timerStart():
+    global Const_StartTime
     Const_StartTime = time.ticks_ms()
     print("[timer] StartTime=", Const_StartTime, sep='')
 
 def timerEnd():
+    global Const_EndTime
     Const_EndTime = time.ticks_ms()
     diff = time.ticks_diff(Const_EndTime, Const_StartTime)
     print("[timer##] Diff=", diff / 1000, "s (", diff,"ms)", " StartTime=", Const_StartTime, " EndTime=", Const_EndTime, sep='')
