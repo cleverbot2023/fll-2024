@@ -7,6 +7,7 @@ import color_sensor
 import sys
 import time
 from hub import port, motion_sensor
+from hub import light_matrix
 
 
 ################### modify code below
