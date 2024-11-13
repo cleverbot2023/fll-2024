@@ -7,43 +7,35 @@ import color_sensor
 import sys
 import time
 from hub import port, motion_sensor
-from hub import light_matrix
 
 
 ################### modify code below
 async def main():
-
-    pixels = [0, 0, 0, 0, 0,
-    0, 0, 100, 0, 0,
-    0, 100, 0, 100, 0,
-    0, 0, 100, 0, 0,
-    0, 0, 0, 0, 0]
-
-    light_matrix.show(pixels)
-    
     motor_pair.pair(motor_pair.PAIR_1, port.A, port.B)
     motion_sensor.set_yaw_face(motion_sensor.BACK)
+
     loop = True
     while(loop):
         color = color_sensor.rgbi(port.E)[0]
-        print(color)
         if(color > 500):
             loop = False
-        await runloop.sleep_ms(10)
-
-        
+        await runloop.sleep_ms(5)
 
 
     timerStart()
-    #17
-    # await rotateTop(120)
-    await move(90, Speed.Fast)
+    
+    #18
+    await move(5)
+    await motor.run_for_degrees(port.D, 50, 100)
+    await move(85, Speed.Fast)
+
     # shark
-    await yaw(-45)
-    # await move(10)
+    runloop.run(move(-11), rotateTop(-120))
+    runloop.run(yaw(-30), rotateTop(-50))
+    await move(18)
     await rotateFront(130)
-    await yaw(0)
-    await move(120, Speed.Fast)
+    await yaw(-4)
+    await move(140, Speed.Fast)
 
     timerEnd()
 
