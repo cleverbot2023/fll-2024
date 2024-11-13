@@ -7,12 +7,20 @@ import color_sensor
 import sys
 import time
 from hub import port, motion_sensor
+from hub import light_matrix
 
 
 ################### modify code below
 async def main():
     motor_pair.pair(motor_pair.PAIR_1, port.A, port.B)
     motion_sensor.set_yaw_face(motion_sensor.BACK)
+
+    pixels = [0, 0, 0, 0, 0,
+    0, 0, 100, 0, 0,
+    0, 0, 0, 0, 0,
+    0, 0, 100, 0, 0,
+    0, 0, 0, 0, 0]
+    light_matrix.show(pixels)
 
     loop = True
     while(loop):
