@@ -16,10 +16,10 @@ async def main():
     motion_sensor.set_yaw_face(motion_sensor.BACK)
     
     pixels = [0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 100, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0]
+    0, 0, 0, 0, 0,
+    0, 0, 100, 0, 0,
+    0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0]
     light_matrix.show(pixels)
     
     loop = True
