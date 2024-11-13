@@ -17,18 +17,17 @@ async def main():
     loop = True
     while(loop):
         color = color_sensor.rgbi(port.E)[0]
-        print(color)
         if(color > 500):
             loop = False
-        await runloop.sleep_ms(10)
+        await runloop.sleep_ms(5)
 
-    # 9s
+    # 8s
     timerStart()
 
-    await move(41)
-    await rotateFront(120)
-    await move(15)
-    runloop.run( rotateFront(-130), move(-90, Speed.Fast))
+    await move(60)
+    await rotateTop(-30)
+    await rotateTop(30)
+    await move(-85, Speed.Fast)
 
     timerEnd()
 
