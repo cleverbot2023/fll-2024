@@ -1,2 +1,8 @@
-qwer56778tyuiop
-123344566
+from hub import light_matrix
+import runloop
+
+async def main():
+    # write your code here
+    await light_matrix.write("Hi! My name is Robot N-R 1 ")
+
+runloop.run(main())
