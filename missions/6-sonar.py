@@ -14,7 +14,7 @@ from hub import light_matrix
 async def main():
     motor_pair.pair(motor_pair.PAIR_1, port.A, port.B)
     motion_sensor.set_yaw_face(motion_sensor.BACK)
-    
+
     pixels = [0, 100, 0, 100, 0,
     0, 0, 0, 0, 0,
     0, 100, 0, 100, 0,
@@ -30,14 +30,15 @@ async def main():
         await runloop.sleep_ms(5)
 
     timerStart()
-    # 15s
+    # 8s
     await move(84)
     await rotateFront(300, Speed.Fast)
-    await move(-43)
-    await rotateTop(400)
-    await move(-60)
-    
-    timerEnd()
+    await move(-95, Speed.Fast)
+
+    time = await timerEnd()
+    #await light_matrix.write(str(time))
+    #await runloop.sleep_ms(1000)
+
 
     sys.exit(0)
 
@@ -205,8 +206,8 @@ async def _moveInternal(label, targetDistance, funcNormal, funcSlow, funcYawLeft
             retry = 0
 
         velocityAdj = abs(int(velocityNormalAdj*yawDiff))
-        if(velocityAdj>30):
-            velocityAdj = 30
+        if(velocityAdj>10):
+            velocityAdj = 10
 
         if funcYawLeft(yawDiff, wheelAdjustOffset) or funcYawSum(yawSum):
             log(
@@ -283,8 +284,8 @@ async def _moveInternal(label, targetDistance, funcNormal, funcSlow, funcYawLeft
             retry = 0
 
         velocityAdj = abs(int(velocityNormalAdj/5*yawDiff))
-        if(velocityAdj > 15):
-            velocityAdj = 15
+        if(velocityAdj > 5):
+            velocityAdj = 5
 
         if funcYawLeft(yawDiff, wheelAdjustOffset) or funcYawSum(yawSum):
             log(
@@ -539,7 +540,7 @@ async def rotate(port, targetDegree, rate, speed=Speed.Slow):
     log(
         "[rotate] port=",port," targetDegree=",rotationDegree," rotationDegree=",rotationDegree
     )
-    await motor.run_for_degrees(port, rotationDegree, rotationSpeed)
+    await motor.run_for_degrees(port, rotationDegree, rotationSpeed, stop= motor.BRAKE)
 
 
 def log(*args, logLevel=LogLevel.Normal):
@@ -556,11 +557,12 @@ def timerStart():
     Const_StartTime = time.ticks_ms()
     print("[timer] StartTime=", Const_StartTime, sep='')
 
-def timerEnd():
+async def timerEnd():
     global Const_EndTime
     Const_EndTime = time.ticks_ms()
     diff = time.ticks_diff(Const_EndTime, Const_StartTime)
     print("[timer##] Diff=", diff / 1000, "s (", diff,"ms)", " StartTime=", Const_StartTime, " EndTime=", Const_EndTime, sep='')
+    return math.ceil(diff / 1000)
 
 
 def buzz():
