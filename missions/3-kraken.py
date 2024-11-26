@@ -20,7 +20,7 @@ async def main():
     0, 0, 0, 0, 0,
     0, 0, 100, 0, 0]
     light_matrix.show(pixels)
-    
+
     loop = True
     while(loop):
         color = color_sensor.rgbi(port.E)[0]
@@ -31,15 +31,23 @@ async def main():
     timerStart()
 
     # 14
-    await motor_pair.move_tank_for_degrees(motor_pair.PAIR_1, 1100, 500, 462)
-    await yaw(84)
-    await move(19)
-    runloop.run(rotateFront(-100), move(15))
-    runloop.run(rotateFront(90), move(-25, Speed.Fast))
-    await yaw(20)
-    await move(-65, Speed.Fast)
+    await move(27)
+    runloop.run(yaw(20), rotateTop(60))
+    await move(31.5)
+    await rotateTop(-100)
+    await yaw(85)
 
-    timerEnd()
+    # to octo
+    await move(19)
+    runloop.run(rotateFront(-100), move(13))
+    runloop.run(rotateFront(55), move(-22))
+    await yaw(30)
+    await move(-65, Speed.Fast)
+    await rotateFront(-60)
+
+    time = await timerEnd()
+    #await light_matrix.write(str(time))
+    #await runloop.sleep_ms(1000)
 
     sys.exit(0)
 
@@ -207,8 +215,8 @@ async def _moveInternal(label, targetDistance, funcNormal, funcSlow, funcYawLeft
             retry = 0
 
         velocityAdj = abs(int(velocityNormalAdj*yawDiff))
-        if(velocityAdj>50):
-            velocityAdj = 50
+        if(velocityAdj>10):
+            velocityAdj = 10
 
         if funcYawLeft(yawDiff, wheelAdjustOffset) or funcYawSum(yawSum):
             log(
@@ -285,8 +293,8 @@ async def _moveInternal(label, targetDistance, funcNormal, funcSlow, funcYawLeft
             retry = 0
 
         velocityAdj = abs(int(velocityNormalAdj/5*yawDiff))
-        if(velocityAdj > 20):
-            velocityAdj = 20
+        if(velocityAdj > 5):
+            velocityAdj = 5
 
         if funcYawLeft(yawDiff, wheelAdjustOffset) or funcYawSum(yawSum):
             log(
@@ -541,7 +549,7 @@ async def rotate(port, targetDegree, rate, speed=Speed.Slow):
     log(
         "[rotate] port=",port," targetDegree=",rotationDegree," rotationDegree=",rotationDegree
     )
-    await motor.run_for_degrees(port, rotationDegree, rotationSpeed)
+    await motor.run_for_degrees(port, rotationDegree, rotationSpeed, stop = motor.BRAKE)
 
 
 def log(*args, logLevel=LogLevel.Normal):
@@ -558,12 +566,12 @@ def timerStart():
     Const_StartTime = time.ticks_ms()
     print("[timer] StartTime=", Const_StartTime, sep='')
 
-def timerEnd():
+async def timerEnd():
     global Const_EndTime
     Const_EndTime = time.ticks_ms()
     diff = time.ticks_diff(Const_EndTime, Const_StartTime)
     print("[timer##] Diff=", diff / 1000, "s (", diff,"ms)", " StartTime=", Const_StartTime, " EndTime=", Const_EndTime, sep='')
-
+    return math.ceil(diff / 1000)
 
 def buzz():
     sound.beep(880, 200, 100)
