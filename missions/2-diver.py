@@ -15,6 +15,8 @@ async def main():
     motor_pair.pair(motor_pair.PAIR_1, port.A, port.B)
     motion_sensor.set_yaw_face(motion_sensor.BACK)
 
+    #motor.stop(port.C, stop = motor.HOLD)
+
     pixels = [0, 0, 0, 0, 0,
     0, 0, 100, 0, 0,
     0, 0, 0, 0, 0,
@@ -32,23 +34,47 @@ async def main():
     #21
     timerStart()
 
+    await move(-1)
     await move(76.5)
-    runloop.run(rotateFront(-140), yaw(-45))
-    await rotateFront(180)
-    await yaw(-77)
     await rotateFront(-140)
+    await yaw(-47)
+    await rotateFront(160)
+    await yaw(-77)
 
-    # go for reefs
-    runloop.run(rotateFront(-140), move(-27))
-    runloop.run(rotateFront(-140), yaw(-2))
-    runloop.run(rotateFront(-140), move(10))
+    motor.reset_relative_position(port.C, 0)
+    await rotateFront(-120)
 
-    await rotateFront(180)
-    runloop.run(rotateFront(-140), move(-11))
-    await yaw(35)
+    # retry
+    posnew = motor.relative_position(port.C)
+    print(posnew)
+    if(posnew > -90):
+        print('retry')
+        await rotateFront(-40)
+
+    # retry
+    posnew = motor.relative_position(port.C)
+    print(posnew)
+    if(posnew > -90):
+        print('retry')
+        await rotateFront(-40)
+
+    await move(-5)
+    posnew = motor.relative_position(port.C)
+    print(posnew)
+    if(posnew > -90):
+        print('retry')
+        await rotateFront(-120)
+
+    # go for reefsawait yaw(29)
+    await yaw(29)
+    runloop.run(rotateFront(-160), move(12))
+    await rotateFront(140)
+    runloop.run(rotateFront(-60), yaw(18))
     await move(-90, Speed.Fast)
 
-    timerEnd()
+    time = await timerEnd()
+    # await light_matrix.write(str(time))
+    # await runloop.sleep_ms(1000)
 
     sys.exit(0)
 
@@ -216,8 +242,8 @@ async def _moveInternal(label, targetDistance, funcNormal, funcSlow, funcYawLeft
             retry = 0
 
         velocityAdj = abs(int(velocityNormalAdj*yawDiff))
-        if(velocityAdj>30):
-            velocityAdj = 30
+        if(velocityAdj>10):
+            velocityAdj = 10
 
         if funcYawLeft(yawDiff, wheelAdjustOffset) or funcYawSum(yawSum):
             log(
@@ -294,8 +320,8 @@ async def _moveInternal(label, targetDistance, funcNormal, funcSlow, funcYawLeft
             retry = 0
 
         velocityAdj = abs(int(velocityNormalAdj/5*yawDiff))
-        if(velocityAdj > 15):
-            velocityAdj = 15
+        if(velocityAdj > 5):
+            velocityAdj = 5
 
         if funcYawLeft(yawDiff, wheelAdjustOffset) or funcYawSum(yawSum):
             log(
@@ -550,7 +576,7 @@ async def rotate(port, targetDegree, rate, speed=Speed.Slow):
     log(
         "[rotate] port=",port," targetDegree=",rotationDegree," rotationDegree=",rotationDegree
     )
-    await motor.run_for_degrees(port, rotationDegree, rotationSpeed)
+    await motor.run_for_degrees(port, rotationDegree, rotationSpeed, stop = motor.BRAKE)
 
 
 def log(*args, logLevel=LogLevel.Normal):
@@ -567,11 +593,13 @@ def timerStart():
     Const_StartTime = time.ticks_ms()
     print("[timer] StartTime=", Const_StartTime, sep='')
 
-def timerEnd():
+async def timerEnd():
     global Const_EndTime
     Const_EndTime = time.ticks_ms()
     diff = time.ticks_diff(Const_EndTime, Const_StartTime)
     print("[timer##] Diff=", diff / 1000, "s (", diff,"ms)", " StartTime=", Const_StartTime, " EndTime=", Const_EndTime, sep='')
+    return math.ceil(diff / 1000)
+    
 
 
 def buzz():
